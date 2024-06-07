@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1717406372 source:d:\hhs jaar 1v3\agv\code\agv_code_v4\fuse.c
+	<avr/io.h>
+
+1717764093 source:d:\hhs jaar 1v3\agv\code\agv_code_v4\main.c
+	<avr/io.h>
+	<util/delay.h>
+	<avr/interrupt.h>
+	"Define.h"
+
+1717763932 d:\hhs jaar 1v3\agv\code\agv_code_v4\define.h
+

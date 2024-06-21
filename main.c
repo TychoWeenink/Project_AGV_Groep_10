@@ -138,74 +138,47 @@ int main(void)
             PORTB &= ~(1<<IN4);
             MOTORL(99);
             MOTORR(99);
-            PORTH &= ~(1 << LED_TEST);
-            PORTH &= ~(1 << LED_TEST2);
-            PORTL &= ~(1 << LED_L_GEEL);
-            PORTL &= ~(1 << LED_R_GEEL);
+            PORTH |= (1 << LED_TEST);
+            PORTH |= (1 << LED_TEST2);
+            PORTL |= (1 << LED_L_GEEL);
+            PORTL |= (1 << LED_R_GEEL);
             toestand = NOODSTOP;
         }
 
         switch (toestand)
         {
             case NOODSTOP:
-                // Voeg hier je code voor NOODSTOP toe
-                if (VOLGAAN = 1)
+                if ((PINK & (1 << toestand_knop)) == 0) //knop op auto
                 {
-                    if((PINK & (1 << START_knop)) !=0)
+                    if ((PINK & (1 << START_knop)) != 0)
                     {
-                        if((PINK & (1 << START_knop)) ==0)
+                        DEBOUNCE;
+                        if ((PINK & (1 << START_knop)) == 0)
                         {
-                            Rechtdoor();
-                            MOTORL(snelheidrechtdoor);
-                            MOTORR(snelheidrechtdoor);
-                            toestand = VOLG;
+                            DEBOUNCE;
+                            PORTH &= ~(1 << LED_TEST);
+                            PORTH &= ~(1 << LED_TEST2);
+                            PORTL &= ~(1 << LED_L_GEEL);
+                            PORTL &= ~(1 << LED_R_GEEL);
+                            toestand = SINGAAL;
                         }
                     }
                 }
-                else
+                if ((PINK & (1 << toestand_knop)) != 0) //knop op volg
                 {
-
-                if (baan == 0)
-                {
-                    if((PINK & (1 << START_knop)) !=0)
+                    if ((PINK & (1 << START_knop)) != 0)
                     {
-                        if((PINK & (1 << START_knop)) ==0)
+                        DEBOUNCE;
+                        if ((PINK & (1 << START_knop)) == 0)
                         {
-                            Rechtdoor();
-                            MOTORL(snelheidrechtdoor);
-                            MOTORR(snelheidrechtdoor);
-                            toestand = AUTOLR;
+                            DEBOUNCE;
+                            PORTH &= ~(1 << LED_TEST);
+                            PORTH &= ~(1 << LED_TEST2);
+                            PORTL &= ~(1 << LED_L_GEEL);
+                            PORTL &= ~(1 << LED_R_GEEL);
+                            toestand = SINGAAL;
                         }
                     }
-                }
-
-                if (baan == 1)
-                {
-                    if((PINK & (1 << START_knop)) !=0)
-                    {
-                        if((PINK & (1 << START_knop)) ==0)
-                        {
-                            Rechtdoor();
-                            MOTORL(snelheidrechtdoor);
-                            MOTORR(snelheidrechtdoor);
-                            toestand = RIJDEN;               //!!!!!!!!!!!!!
-                        }
-                    }
-                }
-
-                else
-                {
-                    if((PINK & (1 << START_knop)) !=0)
-                    {
-                        if((PINK & (1 << START_knop)) ==0)
-                        {
-                            Rechtdoor();
-                            MOTORL(snelheidrechtdoor);
-                            MOTORR(snelheidrechtdoor);
-                            toestand = AUTOLR;               //!!!!!!!!!!!!!
-                        }
-                    }
-                }
                 }
                 if ((PINK &(1<<stop_knop))!=0)
                 {
@@ -316,22 +289,34 @@ int main(void)
                 }
                 if (((PINF & (1 << IR_R)) && (PINF & (1<< IR_L))) != 0) // Voorbij beide balken
                 {
-                    MOTORL(99);
+                    MOTORL(40);
                     MOTORR(40);
                     toestand = BOCHT_1;
                 }
 
 
-                if (agv_ultrasoon_boom_rechts < 20) // boomgedetecteerd
-                  {
-                    HBRUG_UIT();
-                    toestand = BOOMSTOP;
-                  }
-                if (agv_ultrasoon_boom_links < 20)
-                  {
-                    HBRUG_UIT();
-                    toestand = BOOMSTOP;
-                  }
+//                if (agv_ultrasoon_boom_rechts < 20) // boomgedetecteerd
+//                  {
+//                    HBRUG_UIT();
+//                    toestand = BOOMSTOP;
+//                  }
+//                if (agv_ultrasoon_boom_rechts > 559)
+//                {
+//                    HBRUG_UIT();
+//                    toestand = BOOMSTOP;
+//                }
+//
+//
+//                if (agv_ultrasoon_boom_links < 20)
+//                  {
+//                    HBRUG_UIT();
+//                    toestand = BOOMSTOP;
+//                  }
+//                if (agv_ultrasoon_boom_links > 559)
+//                {
+//                    HBRUG_UIT();
+//                    toestand = BOOMSTOP;
+//                }
                 break;
 
             case BOOMSTOP:
@@ -351,13 +336,38 @@ int main(void)
                 break;
             case BOCHT_1:
 //                for (int i = 0; i < 100; i++) {
-                   _delay_ms(8000);
+                   _delay_ms(1000);
+                   MOTORL(99);
+                   MOTORR(40);
+                   _delay_ms(700);//
                     MOTORL(snelheidrechtdoor);
                     MOTORR(snelheidrechtdoor);
+                   _delay_ms(1000); // stukje rechtdoor
+                   MOTORL(99);
+                   MOTORR(40);
+                   _delay_ms(800);//
+                   MOTORL(snelheidrechtdoor);
+                   MOTORR(snelheidrechtdoor);
+                   _delay_ms(1000);
                     toestand = RIJDEN;
 //                }
                 break;
-
+            case BOCHT_2:
+                _delay_ms(1000);
+                   MOTORL(40);
+                   MOTORR(99);
+                   _delay_ms(700);//
+                    MOTORL(snelheidrechtdoor);
+                    MOTORR(snelheidrechtdoor);
+                   _delay_ms(1000); // stukje rechtdoor
+                   MOTORL(40);
+                   MOTORR(99);
+                   _delay_ms(800);//
+                   MOTORL(snelheidrechtdoor);
+                   MOTORR(snelheidrechtdoor);
+                   _delay_ms(1000);
+                    toestand = AUTOLR;
+                break;
 
 //            case BOCHT_1: // van balken af
 //                if(baan == 0) // bocht links
@@ -591,7 +601,9 @@ int main(void)
                 if (((PINF & (1 << IR_R)) && (PINF & (1<< IR_L))) != 0) // Voorbij beide balken
                 {
                     HBRUG_UIT();
-                    toestand = START;
+                    MOTORR(99);
+                    MOTORL(99);
+                    toestand = BOCHT_2;
                 }
                 break;
 
@@ -633,14 +645,9 @@ int main(void)
                 break;
 
             case BOOMRESET:
-                if (agv_ultrasoon_boom_rechts > 20)
-                {
+                _delay_ms(500);
                     toestand = AUTOLR;
-                }
-                if(agv_ultrasoon_boom_links > 20)
-                {
-                    toestand = AUTOLR;
-                }
+
                 break;
         }
     }

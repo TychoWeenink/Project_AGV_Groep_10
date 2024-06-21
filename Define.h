@@ -9,6 +9,11 @@
 #define IR_R          PF1 //pin A1
 #define IR_V          PF2 //pin A2
 
+
+#define IR_BOOM_rechts PK2 //pin A10
+#define IR_BOOM_links PK1 //pin A9
+
+
 //#define ultra_V_echo  PA0 //pin D22 Gr
 //#define ultra_V_trigg PA2 //pin D24 Gl
 //#define ultra_R_echo  PA1 //pin D23 Bl
@@ -18,8 +23,8 @@
 
 #define Ultra_triggers PE3 //pin D5
 
-#define Ultra_R_echo PK2 //pin A10
-#define Ultra_L_echo PK1 //pin A9
+// #define Ultra_R_echo PK2 //pin A10
+// #define Ultra_L_echo PK1 //pin A9
 #define Ultra_V_echo PK4 //pin A12
 
 #define LM_switch     PK3  //pin A11

@@ -295,42 +295,48 @@ int main(void)
                 }
 
 
-//                if (agv_ultrasoon_boom_rechts < 20) // boomgedetecteerd
-//                  {
-//                    HBRUG_UIT();
-//                    toestand = BOOMSTOP;
-//                  }
-//                if (agv_ultrasoon_boom_rechts > 559)
-//                {
-//                    HBRUG_UIT();
-//                    toestand = BOOMSTOP;
-//                }
-//
-//
-//                if (agv_ultrasoon_boom_links < 20)
-//                  {
-//                    HBRUG_UIT();
-//                    toestand = BOOMSTOP;
-//                  }
-//                if (agv_ultrasoon_boom_links > 559)
-//                {
-//                    HBRUG_UIT();
-//                    toestand = BOOMSTOP;
-//                }
+                if (IR_BOOM_rechts != 0) // boomgedetecteerd
+                  {
+                    HBRUG_UIT();
+                    toestand = BOOMSTOP;
+                  }
+          
+                if (IR_BOOM_links != 0)
+                 {
+                    HBRUG_UIT();
+                    toestand = BOOMSTOP;
+                  }
                 break;
 
             case BOOMSTOP:
-                PORTL |= (1<<LED_L_GEEL) | (1<<LED_R_GEEL);
+              if (IR_BOOM_rechts != 0)
+              {
+                PORTL |= (1 << LED_R_GEEL);
                 _delay_ms(500);
-                PORTL &= ~(1<<LED_L_GEEL);
                 PORTL &= ~(1<<LED_R_GEEL);
                 _delay_ms(500);
-                PORTL |= (1<<LED_L_GEEL) | (1<<LED_R_GEEL);
+                PORTL |= (1 << LED_R_GEEL);
                 _delay_ms(500);
                 Rechtdoor();
                 MOTORL(snelheidrechtdoor);
                 MOTORR(snelheidrechtdoor);
                 toestand = BOOMRESET;
+              }
+              else if (IR_BOOM_links != 0)
+              {
+                PORTL |= (1 << LED_R_GEEL);
+                _delay_ms(500);
+                PORTL &= ~(1<<LED_R_GEEL);
+                _delay_ms(500);
+                PORTL |= (1 << LED_R_GEEL);
+                _delay_ms(500);
+                Rechtdoor();
+                MOTORL(snelheidrechtdoor);
+                MOTORR(snelheidrechtdoor);
+                toestand = BOOMRESET;
+              } 
+              
+                
 
 
                 break;
@@ -368,202 +374,6 @@ int main(void)
                    _delay_ms(1000);
                     toestand = AUTOLR;
                 break;
-
-//            case BOCHT_1: // van balken af
-//                if(baan == 0) // bocht links
-//                {
-//                    PORTH |= (1 << LED_TEST); //aan
-//                    PORTH |= (1 << LED_TEST2); //aan
-//                    if((PINK & (1 << LM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << LM_switch)) ==0)
-//                        {
-//                            LOM++;
-//                        }
-//                    }
-//                    if((PINK & (1 << RM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << RM_switch)) ==0)
-//                        {
-//                            ROM++;
-//                        }
-//                    }
-//                    if((LOM <= 6) && (ROM <=6 ))
-//                    {
-//                        ROM = 0;
-//                        LOM = 0;
-//                        MOTORL(99);
-//                        MOTORR(30);
-//                        PORTH &= ~(1 << LED_TEST); //uit
-//                        PORTH &= ~(1 << LED_TEST2); //uit
-//                        toestand = BOCHT_2;
-//                    }
-//                }
-//
-//                else // bocht rechts
-//                {
-//
-//                }
-//
-//                break;
-//
-//            case BOCHT_2: //90 graden
-//                if(baan == 0) // bocht links
-//                {
-//                    PORTH |= (1 << LED_TEST); //aan
-//                    if((PINK & (1 << LM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << LM_switch)) ==0)
-//                        {
-//                            LOM++;
-//                        }
-//                    }
-//                    if((PINK & (1 << RM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << RM_switch)) ==0)
-//                        {
-//                            ROM++;
-//                        }
-//                    }
-//                    if((LOM <= 1) && (ROM <= 9))
-//                    {
-//                        ROM = 0;
-//                        LOM = 0;
-//                        MOTORL(60);
-//                        MOTORR(60);
-//                        toestand = BOCHT_2;
-//                    }
-//                }
-//
-//                else // bocht rechts
-//                {
-//
-//                }
-//
-//                break;
-//
-//            case BOCHT_3: //stukje door
-//                if(baan == 0) // bocht links
-//                {
-//                    PORTH |= (1 << LED_TEST); //aan
-//                    PORTH |= (1 << LED_TEST2); //aan
-//                    if((PINK & (1 << LM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << LM_switch)) ==0)
-//                        {
-//                            LOM++;
-//                        }
-//                    }
-//                    if((PINK & (1 << RM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << RM_switch)) ==0)
-//                        {
-//                            ROM++;
-//                        }
-//                    }
-//                    if((LOM && ROM) <= 3)
-//                    {
-//                        PORTH &= ~(1 << LED_TEST); //uit
-//                        PORTH &= ~(1 << LED_TEST2); //uit
-//                        ROM = 0;
-//                        LOM = 0;
-//                        MOTORL(60);
-//                        MOTORR(30);
-//                        toestand = BOCHT_2;
-//                    }
-//                }
-//
-//                else // bocht rechts
-//                {
-//
-//                }
-//
-//                break;
-//
-//            case BOCHT_4: //90 graden
-//                if(baan == 0) // bocht links
-//                {
-//                    PORTH |= (1 << LED_TEST); //aan
-//                    if((PINK & (1 << LM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << LM_switch)) ==0)
-//                        {
-//                            LOM++;
-//                        }
-//                    }
-//                    if((PINK & (1 << RM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << RM_switch)) ==0)
-//                        {
-//                            ROM++;
-//                        }
-//                    }
-//                    if((LOM <= 1) && (ROM <= 9))
-//                    {
-//                        PORTH &= ~(1 << LED_TEST); //uit
-//                        PORTH &= ~(1 << LED_TEST2); //uit
-//                        ROM = 0;
-//                        LOM = 0;
-//                        MOTORL(40);
-//                        MOTORR(40);
-//                        toestand = BOCHT_2;
-//                    }
-//                }
-//
-//                else // bocht rechts
-//                {
-//
-//                }
-//
-//                break;
-//
-//            case BOCHT_5: //stukje tot balk
-//                if((baan) == 0) // bocht links
-//                {
-//                    PORTH |= (1 << LED_TEST); //aan
-//                    PORTH |= (1 << LED_TEST2); //aan
-//                    if((PINK & (1 << LM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << LM_switch)) ==0)
-//                        {
-//                            LOM++;
-//                        }
-//                    }
-//                    if((PINK & (1 << RM_switch)) != 0) // als knop ingedrukt optellen
-//                    {
-//                        DEBOUNCE;
-//                        if((PINK &(1 << RM_switch)) ==0)
-//                        {
-//                            ROM++;
-//                        }
-//                    }
-//                    if((LOM && ROM) <= 6)
-//                    {
-//                        PORTH &= ~(1 << LED_TEST); //uit
-//                        PORTH &= ~(1 << LED_TEST2); //uit
-//                        ROM = 0;
-//                        LOM = 0;
-//                        MOTORL(snelheidrechtdoor);
-//                        MOTORR(snelheidrechtdoor);
-//                        toestand = RIJDEN;
-//                    }
-//                }
-//
-//                else // bocht rechts
-//                {
-//
-//                }
-//                break;
-
 
             case RIJDEN:
                if ((PINF & (1 << IR_R)) == 0) // muur dichtbij
@@ -645,9 +455,25 @@ int main(void)
                 break;
 
             case BOOMRESET:
-                _delay_ms(500);
+                    if((IR_BOOM_rechts == 0) && (IR_BOOM_links == 0))
+                    {
                     toestand = AUTOLR;
-
+                    }
+                if ((PINF & (1 << IR_V)) == 0) // Detectie & te ver
+                {
+                    PORTH |= (1 << LED_TEST); //aan
+                    PORTH |= (1 << LED_TEST2); //aan
+                    HBRUG_UIT();
+                }
+                 if ((PINF & (1 << IR_V)) != 0) // geen detectie & in bereik
+                {
+                    PORTH &= ~(1 << LED_TEST); //uit
+                    PORTH &= ~(1 << LED_TEST2); //uit
+                    Rechtdoor();
+                    MOTORL(snelheidrechtdoor);
+                    MOTORR(snelheidrechtdoor);
+                }
+              
                 break;
         }
     }

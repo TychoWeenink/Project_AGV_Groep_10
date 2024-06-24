@@ -295,13 +295,13 @@ int main(void)
                 }
 
 
-                if (IR_BOOM_rechts != 0) // boomgedetecteerd
+                if ((1<<IR_BOOM_rechts) != 0) // boomgedetecteerd
                   {
                     HBRUG_UIT();
                     toestand = BOOMSTOP;
                   }
           
-                if (IR_BOOM_links != 0)
+                if ((1<<IR_BOOM_links) != 0)
                  {
                     HBRUG_UIT();
                     toestand = BOOMSTOP;
@@ -309,7 +309,7 @@ int main(void)
                 break;
 
             case BOOMSTOP:
-              if (IR_BOOM_rechts != 0)
+              if ((1<<IR_BOOM_rechts) != 0)
               {
                 PORTL |= (1 << LED_R_GEEL);
                 _delay_ms(500);
@@ -322,7 +322,7 @@ int main(void)
                 MOTORR(snelheidrechtdoor);
                 toestand = BOOMRESET;
               }
-              else if (IR_BOOM_links != 0)
+              else if ((1<<IR_BOOM_links) != 0)
               {
                 PORTL |= (1 << LED_R_GEEL);
                 _delay_ms(500);
@@ -455,7 +455,7 @@ int main(void)
                 break;
 
             case BOOMRESET:
-                    if((IR_BOOM_rechts == 0) && (IR_BOOM_links == 0))
+                    if(((1<< IR_BOOM_rechts) == 0) && ((1<<IR_BOOM_links) == 0))
                     {
                     toestand = AUTOLR;
                     }

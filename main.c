@@ -97,7 +97,7 @@ void init()
     OCR1A = 0;
 
     // Invoer pinnen
-    DDRK &= ~((1 << START_knop) | (1 << stop_knop) | (1 << LM_switch) | (1 << RM_switch));
+    DDRK &= ~((1 << START_knop) | (1 << stop_knop) | (1 << LM_switch) | (1 << RM_switch) | (1 << IR_L) | (1 << IR_R) | (1 << IR_BOOM_rechts) | (1 << IR_BOOM_links));
 
     // Uitvoer pinnen
     DDRH |= (1 << LED_TEST) | (1 << LED_TEST2);
@@ -295,34 +295,36 @@ int main(void)
                 }
 
 
-                if ((1<<IR_BOOM_rechts) != 0) // boomgedetecteerd
-                  {
-                    HBRUG_UIT();
-                    toestand = BOOMSTOP;
-                  }
-          
-                if ((1<<IR_BOOM_links) != 0)
-                 {
-                    HBRUG_UIT();
-                    toestand = BOOMSTOP;
-                  }
+//                if ((PINK &(1<<IR_BOOM_rechts)) != 0) // boomgedetecteerd
+//                  {
+//                    HBRUG_UIT();
+//                    toestand = BOOMSTOP;
+//                  }
+//
+//                if ((PINK &(1<<IR_BOOM_links)) != 0)
+//                 {
+//                    HBRUG_UIT();
+//                    toestand = BOOMSTOP;
+//                  }
                 break;
 
             case BOOMSTOP:
-              if ((1<<IR_BOOM_rechts) != 0)
+              if ((PINK & (1<<IR_BOOM_rechts)) != 0)
               {
-                PORTL |= (1 << LED_R_GEEL);
+
+                PORTL |= (1 << LED_L_GEEL);
                 _delay_ms(500);
-                PORTL &= ~(1<<LED_R_GEEL);
+                PORTL &= ~(1<<LED_L_GEEL);
                 _delay_ms(500);
-                PORTL |= (1 << LED_R_GEEL);
+                PORTL |= (1 << LED_L_GEEL);
                 _delay_ms(500);
+                PORTL &= ~(1 << LED_L_GEEL);
                 Rechtdoor();
                 MOTORL(snelheidrechtdoor);
                 MOTORR(snelheidrechtdoor);
                 toestand = BOOMRESET;
               }
-              else if ((1<<IR_BOOM_links) != 0)
+              else if ((PINK &(1<<IR_BOOM_links)) != 0)
               {
                 PORTL |= (1 << LED_R_GEEL);
                 _delay_ms(500);
@@ -330,31 +332,32 @@ int main(void)
                 _delay_ms(500);
                 PORTL |= (1 << LED_R_GEEL);
                 _delay_ms(500);
+                PORTL &= ~(1<<LED_R_GEEL);
                 Rechtdoor();
                 MOTORL(snelheidrechtdoor);
                 MOTORR(snelheidrechtdoor);
                 toestand = BOOMRESET;
-              } 
-              
-                
+              }
+
+
 
 
                 break;
             case BOCHT_1:
 //                for (int i = 0; i < 100; i++) {
-                   _delay_ms(1000);
+                   _delay_ms(250);
                    MOTORL(99);
                    MOTORR(40);
-                   _delay_ms(700);//
+                   _delay_ms(500);// bocht
                     MOTORL(snelheidrechtdoor);
                     MOTORR(snelheidrechtdoor);
-                   _delay_ms(1000); // stukje rechtdoor
+                   _delay_ms(500); // stukje rechtdoor
                    MOTORL(99);
                    MOTORR(40);
-                   _delay_ms(800);//
+                   _delay_ms(500);// bocht
                    MOTORL(snelheidrechtdoor);
                    MOTORR(snelheidrechtdoor);
-                   _delay_ms(1000);
+                   _delay_ms(500);
                     toestand = RIJDEN;
 //                }
                 break;
@@ -455,25 +458,26 @@ int main(void)
                 break;
 
             case BOOMRESET:
-                    if(((1<< IR_BOOM_rechts) == 0) && ((1<<IR_BOOM_links) == 0))
+                if(((PINK & (1<< IR_BOOM_rechts)) && (PINK & (1<<IR_BOOM_links))) ==0 )
                     {
+                    _delay_ms(50);
                     toestand = AUTOLR;
                     }
-                if ((PINF & (1 << IR_V)) == 0) // Detectie & te ver
-                {
-                    PORTH |= (1 << LED_TEST); //aan
-                    PORTH |= (1 << LED_TEST2); //aan
-                    HBRUG_UIT();
-                }
-                 if ((PINF & (1 << IR_V)) != 0) // geen detectie & in bereik
-                {
-                    PORTH &= ~(1 << LED_TEST); //uit
-                    PORTH &= ~(1 << LED_TEST2); //uit
-                    Rechtdoor();
-                    MOTORL(snelheidrechtdoor);
-                    MOTORR(snelheidrechtdoor);
-                }
-              
+//                if ((PINF & (1 << IR_V)) == 0) // Detectie & te ver
+//                {
+//                    PORTH |= (1 << LED_TEST); //aan
+//                    PORTH |= (1 << LED_TEST2); //aan
+//                    HBRUG_UIT();
+//                }
+//                 if ((PINF & (1 << IR_V)) != 0) // geen detectie & in bereik
+//                {
+//                    PORTH &= ~(1 << LED_TEST); //uit
+//                    PORTH &= ~(1 << LED_TEST2); //uit
+//                    Rechtdoor();
+//                    MOTORL(snelheidrechtdoor);
+//                    MOTORR(snelheidrechtdoor);
+//                }
+
                 break;
         }
     }
